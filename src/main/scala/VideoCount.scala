@@ -27,7 +27,7 @@ object VideoCount {
     //初始化spark
     val sparkConf = new SparkConf()
       .setMaster("local[2]")
-      .setAppName("TrafficModel")
+      .setAppName("VideoCount")
     val sc = new SparkContext(sparkConf)
     val fileRdd = sc.textFile("D:\\SparkExample\\Video.txt")
     // 使用样例类来保存每一行数据
@@ -47,19 +47,15 @@ object VideoCount {
       case (0,List()) => (1,List(b))
       case _ => (a._1+1,b::a._2)
     }
-
     // 这个就是合并了
     val combOp = (a:(Int,List[String]),b:(Int,List[String])) =>{
       (a._1+b._1,a._2:::b._2)
     }
-
-    // 初始值为(0,List[String]())
+    // 初始值为(0,List[String]()) (k,v) 类型的运算；
     val aggRdd = mapRdd.aggregateByKey((0,List[String]()))(seqOp,combOp).map(a=>{
       (a._1,a._2._1,a._2._2.distinct.length)
     })
     aggRdd.collect().foreach(println)
-
-    println("==============")
     sc.stop()
   }
 }

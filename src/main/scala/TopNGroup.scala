@@ -26,8 +26,10 @@ object TopNGroup {
     val groupsSort = group.map(x=>{
       val key = x._1
       val value = x._2
+      // 两种排序的方式
       val valueSort = value.toList.sortWith(_>_).take(4)
-      (key,valueSort)
+      val vlaueSort2 = value.toList.sorted.reverse.take(4)
+      (key,vlaueSort2)
     })
     // 结果(Hadoop,List(93, 75, 69, 68))
     groupsSort.collect().foreach(println)
